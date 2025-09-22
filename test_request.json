@@ -1,0 +1,10 @@
+{
+  "strategy": "bollinger",
+  "initial_cash": 1000,
+  "position_size": 100,
+  "commission": 0.05,
+  "strategy_params": {
+    "period": 20,
+    "stdDev": 2
+  }
+}
