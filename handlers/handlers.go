@@ -263,7 +263,7 @@ func RunBacktestHandler(c *fiber.Ctx) error {
 
 	positionSize := req.PositionSize
 	if positionSize <= 0 {
-		positionSize = 100.0 // Default value ($100)
+		positionSize = 50.0 // Default value ($50)
 	}
 
 	engine := backtester.NewBacktestEngine(initialCash, commission/100.0, positionSize) // Convert percentage to decimal
@@ -280,8 +280,8 @@ func RunBacktestHandler(c *fiber.Ctx) error {
 	// Create strategy if specified
 	var strategy interface{}
 	if req.Strategy == "bollinger" {
-		period := 20
-		stdDev := 2.0
+		period := 10
+		stdDev := 1.0
 
 		if p, ok := req.StrategyParams["period"].(float64); ok {
 			period = int(p)

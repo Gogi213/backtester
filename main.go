@@ -17,6 +17,9 @@ func main() {
 		Level: compress.LevelBestSpeed,
 	}))
 
+	// Serve static files from templates directory
+	app.Static("/templates", "./templates")
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		html := templates.GetHTMLTemplate()
 		return c.Type("html").SendString(html)

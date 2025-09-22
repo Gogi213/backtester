@@ -82,8 +82,17 @@ func (be *BacktestEngine) Run(data []ChartPoint, strategy interface{}) *Backtest
 			// Create order based on signal
 			switch signal.Action {
 			case "BUY":
-				// Only buy if we don't have a position
-				if currentPosition <= 0 && be.portfolioManager.GetPortfolio().Cash >= be.positionSize {
+				if currentPosition < 0 {
+					// Close short position
+					order = &Order{
+						Symbol: "BTCUSDT",
+						Qty:    -currentPosition, // Close entire position
+						Price:  point.Price,
+						IsBuy:  true,
+						Time:   time.Unix(point.Time/1000, 0),
+					}
+				} else if currentPosition == 0 && be.portfolioManager.GetPortfolio().Cash >= be.positionSize {
+					// Open long position
 					qty := be.positionSize / point.Price
 					order = &Order{
 						Symbol: "BTCUSDT",
@@ -94,9 +103,18 @@ func (be *BacktestEngine) Run(data []ChartPoint, strategy interface{}) *Backtest
 					}
 				}
 			case "SELL":
-				// Only sell if we have a long position
 				if currentPosition > 0 {
-					qty := currentPosition // Close entire position
+					// Close long position
+					order = &Order{
+						Symbol: "BTCUSDT",
+						Qty:    currentPosition, // Close entire position
+						Price:  point.Price,
+						IsBuy:  false,
+						Time:   time.Unix(point.Time/1000, 0),
+					}
+				} else if currentPosition == 0 {
+					// Open short position
+					qty := be.positionSize / point.Price
 					order = &Order{
 						Symbol: "BTCUSDT",
 						Qty:    qty,
