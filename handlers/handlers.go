@@ -280,7 +280,7 @@ func RunBacktestHandler(c *fiber.Ctx) error {
 	// Create strategy if specified
 	var strategy interface{}
 	if req.Strategy == "bollinger" {
-		period := 10
+		period := 100
 		stdDev := 1.0
 
 		if p, ok := req.StrategyParams["period"].(float64); ok {

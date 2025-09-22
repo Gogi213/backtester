@@ -1,4 +1,3 @@
-let pricePlot = null;
 let equityPlot = null;
 let uplot = null; // Объявляем переменную uplot
 
@@ -28,7 +27,7 @@ function updateStrategyParams() {
     const paramsDiv = document.getElementById('strategyParams');
     
     if (strategy === 'bollinger') {
-        paramsDiv.innerHTML = '<label for="bbPeriod">Period:</label><input type="number" id="bbPeriod" value="10" min="2"><label for="bbStdDev">Standard Deviations:</label><input type="number" id="bbStdDev" value="1" step="0.1" min="0.1">';
+        paramsDiv.innerHTML = '<label for="bbPeriod">Period:</label><input type="number" id="bbPeriod" value="100" min="2"><label for="bbStdDev">Standard Deviations:</label><input type="number" id="bbStdDev" value="1" step="0.1" min="0.1">';
     }
 }
 
@@ -157,119 +156,6 @@ function displayResults(data) {
         equityPlot = new uPlot(opts, [timestamps, equity], document.getElementById('equityChart'));
     }
     
-    // Display price chart with trade markers
-    if (data.price_data && data.price_data.length > 0) {
-        if (pricePlot) {
-            pricePlot.destroy();
-        }
-        
-        // Prepare data for uPlot
-        const timestamps = data.price_data.map(point => point.time / 1000); // Convert ms to seconds
-        const prices = data.price_data.map(point => point.price);
-        
-        // Configure uPlot
-        const opts = {
-            title: "Price Chart with Trade Markers",
-            id: "price-chart",
-            class: "my-chart",
-            width: document.getElementById('priceChart').offsetWidth,
-            height: 500,
-            series: [
-                {},
-                {
-                    label: "Price",
-                    stroke: "blue",
-                    width: 1,
-                    fill: "rgba(0, 255, 0.1)",
-                    points: { show: false }
-                }
-            ],
-            axes: [
-                {
-                    label: "Time",
-                    labelSize: 80,
-                    stroke: "black",
-                    grid: { show: true, stroke: "#eee" },
-                    ticks: { show: true, stroke: "#ddd" },
-                    scale: "x",
-                    values: [
-                        [360000, "{HH}:{mm}", null, null, 1],
-                        [600, "{HH}:{mm}", null, null, 1],
-                        [1000, "{HH:mm:ss}", null, null, 1]
-                    ]
-                },
-                {
-                    label: "Price",
-                    labelSize: 60,
-                    stroke: "black",
-                    grid: { show: true, stroke: "#eee" },
-                    ticks: { show: true, stroke: "#ddd" },
-                    scale: "y"
-                }
-            ],
-            cursor: {
-                show: true,
-                drag: { show: true, x: true, y: false, setScale: true },
-                sync: { key: "hft-backtester" }
-            },
-            legend: { show: true }
-        };
-        
-        // Create uPlot chart
-        pricePlot = new uPlot(opts, [timestamps, prices], document.getElementById('priceChart'));
-        
-        // Add trade markers if we have trades
-        if (data.trades && data.trades.length > 0) {
-            // Prepare trade marker data
-            const buyTrades = [];
-            const sellTrades = [];
-            
-            data.trades.forEach(trade => {
-                const tradeTime = trade.time / 1000; // Convert ms to seconds
-                if (trade.is_buy) {
-                    buyTrades.push([tradeTime, trade.price]);
-                } else {
-                    sellTrades.push([tradeTime, trade.price]);
-                }
-            });
-            
-            // Add buy markers (green triangles)
-            if (buyTrades.length > 0) {
-                pricePlot.addSeries({
-                    label: "Buy Trades",
-                    stroke: "green",
-                    fill: "green",
-                    points: {
-                        show: true,
-                        size: 5,
-                        symbol: "triangleUp"
-                    }
-                }, 2); // Add as third series (index 2)
-            }
-            
-            // Add sell markers (red triangles)
-            if (sellTrades.length > 0) {
-                pricePlot.addSeries({
-                    label: "Sell Trades",
-                    stroke: "red",
-                    fill: "red",
-                    points: {
-                        show: true,
-                        size: 5,
-                        symbol: "triangleDown"
-                    }
-                }, 3); // Add as fourth series (index 3)
-            }
-            
-            // Update data with trade markers
-            if (buyTrades.length > 0 || sellTrades.length > 0) {
-                const allData = [timestamps, prices];
-                if (buyTrades.length > 0) allData.push(...buyTrades.map(t => [t[0], t[1]]));
-                if (sellTrades.length > 0) allData.push(...sellTrades.map(t => [t[0], t[1]]));
-                pricePlot.setData(allData);
-            }
-        }
-    }
     
     // Display trades table
     if (data.trades && data.trades.length > 0) {
@@ -309,9 +195,6 @@ function displayResults(data) {
 
 // Handle window resize
 window.addEventListener('resize', () => {
-    if (pricePlot) {
-        pricePlot.setSize(document.getElementById('priceChart').offsetWidth, 500);
-    }
     if (equityPlot) {
         equityPlot.setSize(document.getElementById('equityChart').offsetWidth, 500);
     }

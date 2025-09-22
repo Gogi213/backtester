@@ -51,7 +51,7 @@ func GetHTMLTemplate() string {
                 <label>Strategy Params:</label>
                 <div class="strategy-params" id="strategyParams">
                     <label for="bbPeriod">Period:</label>
-                    <input type="number" id="bbPeriod" value="10" min="2">
+                    <input type="number" id="bbPeriod" value="100" min="2">
                     <label for="bbStdDev">Standard Deviations:</label>
                     <input type="number" id="bbStdDev" value="1" step="0.1" min="0.1">
                 </div>
@@ -66,11 +66,6 @@ func GetHTMLTemplate() string {
             
             <div class="metrics-grid" id="metrics">
                 <!-- Metrics will be populated here -->
-            </div>
-            
-            <div class="chart-container">
-                <h3>Price Chart with Trade Markers</h3>
-                <div id="priceChart"></div>
             </div>
             
             <div class="chart-container">
