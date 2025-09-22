@@ -119,7 +119,7 @@ function displayResults(data) {
                     label: "Equity",
                     stroke: "green",
                     width: 2,
-                    fill: "rgba(0, 255, 0, 0.1)",
+                    fill: "rgba(0, 255, 0.1)",
                     points: { show: false }
                 }
             ],
@@ -132,8 +132,8 @@ function displayResults(data) {
                     ticks: { show: true, stroke: "#ddd" },
                     scale: "x",
                     values: [
-                        [3600000, "{HH}:{mm}", null, null, null, 1],
-                        [600, "{HH}:{mm}", null, null, null, 1],
+                        [3600000, "{HH}:{mm}", null, null, 1],
+                        [600, "{HH}:{mm}", null, null, 1],
                         [100, "{HH}:{mm}:{ss}", null, 1]
                     ]
                 },

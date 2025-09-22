@@ -12,10 +12,6 @@ func GetHTMLTemplate() string {
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>HFT Backtester v1.0</h1>
-        </header>
-        
         <section class="config-section">
             <h2>Backtest Configuration</h2>
             <div class="form-group">
